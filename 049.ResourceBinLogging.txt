@@ -1,0 +1,11 @@
+SHOW BINARY LOGS;
+
+SHOW VARIBALES LIKE '%log_bin%';
+SHOW VARIBALES LIKE '%bin%';
+
+disable_log_bin
+
+binlog_format = statement
+
+INSERT INTO contacts(first_name,last_name,phone,email)
+VALUES('Imran1','Afzal1','(408)-999-9765','imran.afzal14@mysqlleraning.org');

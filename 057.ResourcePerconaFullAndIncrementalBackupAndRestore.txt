@@ -1,0 +1,60 @@
+rm -rf /var/mysqldatabases/backups/*
+
+ll  /var/mysqldatabases/backups/
+
+-- login to workbench
+--sakila db 
+
+INSERT INTO contacts(first_name,last_name,phone,email)
+VALUES('Ali','Abbas','(408)-999-9765','ali.abbas@mysqlleraning.org');
+
+
+select * from contacts;
+
+xtrabackup --backup --target-dir=/var/mysqldatabases/backups/full
+
+INSERT INTO contacts(first_name,last_name,phone,email)
+VALUES('Imran','Afzal','(408)-999-9765','imran.afzal@mysqlleraning.org');
+
+select * from contacts;
+
+
+xtrabackup --backup --target-dir=/var/mysqldatabases/backups/incremental1 --incremental-basedir=/var/mysqldatabases/backups/full
+
+INSERT INTO contacts(first_name,last_name,phone,email)
+VALUES('Dino','James','(408)-999-9765','Dino.James@mysqlleraning.org');
+
+select * from contacts;
+
+xtrabackup --backup --target-dir=/var/mysqldatabases/backups/incremental2 --incremental-basedir=/var/mysqldatabases/backups/incremental1
+
+xtrabackup --prepare --target-dir=/var/mysqldatabases/backups/full
+
+xtrabackup --prepare --apply-log-only --target-dir=/var/mysqldatabases/backups/full
+
+xtrabackup --prepare --apply-log-only --target-dir=/var/mysqldatabases/backups/full --incremental-dir=/var/mysqldatabases/backups/incremental1
+
+xtrabackup --prepare --target-dir=/var/mysqldatabases/backups/full --incremental-dir=/var/mysqldatabases/backups/incremental2
+
+
+sudo systemctl stop mysqld
+
+rm -rf /var/lib/mysql/*
+
+ll /var/lib/mysql/
+
+
+xtrabackup --copy-back --target-dir=/var/mysqldatabases/backups/full
+
+chown -R mysql.mysql /var/lib/mysql
+
+systemctl start mysqld
+
+
+
+
+
+
+
+
+

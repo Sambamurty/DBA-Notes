@@ -1,0 +1,32 @@
+GRANT SELECT ON sakila.* TO 'databaseuser'@'%';
+
+GRANT INSERT, UPDATE, DELETE ON sakila.* TO 'databaseuser'@'%';
+
+
+GRANT SELECT ON *.* TO 'databaseuser'@'%';
+
+insert into contacts (first_name,last_name,phone,email) values ('Abbas','Mehmood','(409-987-8547)','amehmood@udemy.com');
+
+
+GRANT INSERT ON MyFirstDatabase.* TO 'databaseuser'@'%';
+
+GRANT DELETE ON MyFirstDatabase.contacts TO 'databaseuser'@'%';
+
+GRANT SELECT ON MyFirstDatabase.contacts TO 'databaseuser'@'%';
+
+CREATE USER 'testuser'@'localhost' IDENTIFIED BY 'P@ssword1';
+
+GRANT    SELECT (title),    UPDATE(title) ON MyFirstDatabase.tasksTO 'testuser'@'localhost';
+
+
+GRANT EXECUTE ON PROCEDURE sakila.GetAllCustomers TO 'databaseuser'@'%';
+
+'
+
+GRANT ALL ON sakila.* TO 'databaseuser'@'%';
+
+GRANT USAGE ON *.* TO 'databaseuser'@'%';
+
+
+GRANT SELECT ON sakila.* TO 'databaseuser'@'%' WITH GRANT OPTION;
+

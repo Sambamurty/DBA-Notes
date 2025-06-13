@@ -1,0 +1,25 @@
+sudo mkdir dailydbbackups
+
+#!/bin/bash
+
+# set up all the mysqldump variables
+DATE=`date +"%d_%b_%Y_%H%M"`
+SQLFILESINGLEDB=/var/lib/backups/dailydbbackups/db_backup_${DATE}.sql
+SQLFILEALLDB=/var/lib/backups/dailydbbackups/db_backup_ALL${DATE}.sql
+DATABASE=sakila
+USER=root
+PASSWORD=Abb@s123
+
+# backup single db
+sudo mysqldump -u ${USER} -p${PASSWORD} ${DATABASE} > ${SQLFILESINGLEDB}
+
+# backup for all databases
+sudo mysqldump -u ${USER} -p${PASSWORD} --all-databases > ${SQLFILEALLDB}
+
+sudo find /var/lib/backups/dailydbbackups/. -mtime +1 -exec rm {} \;
+
+
+chmod +x backupscript.sh
+
+
+0 1 * * * /var/lib/backups/backupscript.sh

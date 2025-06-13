@@ -1,0 +1,52 @@
+use sakila;
+
+select * from film;
+
+select * from film where rating = 'G';
+
+select * from film where rating = 'g';
+
+select count(*) from film where rating = 'g';
+
+select count(1) from film where rating = 'g';
+
+select count(film_id) from film;
+
+select count(film_id) from film where rating = 'G';
+
+select *  from film where rating = 'PG' and rental_rate > 2.99;
+
+select *  from film where rating = 'g' or rental_rate > 2.99;
+
+select *  from film where rating = 'g' or rental_rate = 2.99 order by length desc ;
+
+select title,rating,rental_rate ,rating, last_update ,length  from film where rating = 'g' And rental_rate > 2.99 order by length desc ;
+
+
+select * from rental;
+
+select * from rental where return_date < '2005-05-26 22:04:30';
+
+select * from rental where return_date between  '2005-05-26 22:04:30' and '2005-05-30 05:44:27' order by return_date desc;
+
+select * from rental where customer_id in (130,459,269,575);
+
+select title,rating,rental_rate ,rating, last_update  from film where rating <> 'g';
+
+select title,rating,rental_rate ,rating, last_update  from film where rating != 'g';
+
+
+select * from film;
+
+select rental_rate as CurrentRate,rental_rate * 10 as NewRentalRate from film;
+
+
+select distinct(rental_rate) from film order by rental_rate;
+
+select count(1) as NoOfMovies , rating from film group by rating;
+
+select count(1) as NoOfMovies , rating from film where rating <> 'PG' group by rating;
+
+select count(1) as NoOfMovies , rating from film where rating <> 'PG' group by rating Having Count(NoOfMovies) > 200;
+
+

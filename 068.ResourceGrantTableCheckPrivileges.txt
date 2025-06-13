@@ -1,0 +1,16 @@
+select * from mysql.user;
+
+select * from mysql.global_grants;
+
+select * from mysql.db;
+
+select * from mysql.tables_priv;
+
+select * from mysql.columns_priv;
+
+select * from mysql.procs_priv;
+
+show grants;
+
+show grants for 'databaseuser'@'%';
+

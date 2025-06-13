@@ -1,0 +1,70 @@
+show variables like '%log_bin%';
+
+show variables like '%bin%';
+
+
+binlog_format = statement
+
+systemctl restart mysqld
+
+SHOW BINARY LOGS;
+
+SHOW MASTER STATUS;
+
+SHOW MASTER STATUS;
++---------------+----------+--------------+------------------+-------------------+
+| File          | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
++---------------+----------+--------------+------------------+-------------------+
+| binlog.000020 |      156 |              |                  |                   |
++---------------+----------+--------------+------------------+-------------------+
+
+
+
+
+
+mysqldump -uroot -p MyFirstDatabase > /var/lib/backups/fullbackup_myfirstdatabase.sql
+
+-- 20:43
+
+
+CREATE TABLE IF NOT EXISTS contacts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    UNIQUE KEY unique_email (email)
+);
+
+INSERT INTO contacts(first_name,last_name,phone,email)
+VALUES('John','Doe','(408)-999-9765','john.doe@mysqltutorial.org');
+
+INSERT INTO contacts(first_name,last_name,phone,email)
+VALUES('John','Doe','(408)-999-9765','john.doe1@mysqltutorial.org');
+
+INSERT INTO contacts(first_name,last_name,phone,email)
+VALUES('John','Doe','(408)-999-9765','john.doe2@mysqltutorial.org');
+
++---------------+----------+--------------+------------------+-------------------+
+| File          | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
++---------------+----------+--------------+------------------+-------------------+
+| binlog.000020 |     2226 |              |                  |                   |
++---------------+----------+--------------+------------------+-------------------+
+
+drop table tasks;
+
+cd /var/lib/mysql
+
+-- mysqlbinlog --start-datetime="2022-06-15 17:00:00" --stop-datetime="2022-06-15 17:30:00" --verbose /var/lib/mysql/binlog.000020 | grep -C 12 "DROP TABLE"
+-- mysqlbinlog --start-datetime="2022-06-16 16:00:00" --stop-datetime="2022-06-16 17:30:00" --verbose /var/lib/mysql/binlog.000020 | grep -C 12 "DROP TABLE"
+
+--20:42:00
+--20:48:01 
+
+mysqlbinlog --start-datetime="2022-06-16 20:42:00" --stop-datetime="2022-06-16 20:48:00" /var/lib/mysql/binlog.000020 > /var/lib/backups/binlogbackup_myfirstdatabase.sql
+
+mysql -uroot -p MyFirstDatabase < /var/lib/backups/fullbackup_myfirstdatabase.sql
+
+mysql -uroot -p MyFirstDatabase < /var/lib/backups/binlogbackup_myfirstdatabase.sql
+
+

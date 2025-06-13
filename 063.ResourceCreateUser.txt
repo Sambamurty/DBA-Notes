@@ -1,0 +1,11 @@
+CREATE USER 'databaseuser'@'localhost' IDENTIFIED BY 'P@kistan1';
+
+flush privileges;
+
+
+select user from mysql.user where user = 'databaseuser';
+
+-- LOGIN INTO MYSQL USING THE NEW LOGIN
+
+
+

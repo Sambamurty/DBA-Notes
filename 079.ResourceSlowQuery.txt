@@ -1,0 +1,36 @@
+show variables like '%slow_query%';
++---------------------+--------------------------------------+
+| Variable_name       | Value                                |
++---------------------+--------------------------------------+
+| slow_query_log      | OFF                                  |
+| slow_query_log_file | /var/lib/mysql/MySQLServer1-slow.log |
++---------------------+--------------------------------------+
+
+-- edit my.cnf file
+
+slow_query_log = 1
+slow_query_log_file = /var/lib/mysql/MySQLServer1-slow.log
+long_query_time = 2
+
+-- restart 
+
+
+SELECT SLEEP(1);
+
+SELECT SLEEP(2);
+
+
+SELECT SLEEP(5);
+
+
+SELECT SLEEP(7);
+
+
+mysqldumpslow -a /var/lib/mysql/MySQLServer1-slow.log
+
+
+-- WITHOUT A REBOOT
+SET GLOBAL slow_query_log_file = '/var/lib/mysql/slow.log';
+SET GLOBAL long_query_time = 1;
+SET GLOBAL slow_query_log = 'ON';
+FLUSH LOGS;

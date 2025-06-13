@@ -1,0 +1,25 @@
+cd /var/lib
+
+mkdir backups
+
+sudo chmod -R 777 backups
+
+
+mysqldump -uroot -p MyFirstDatabase > /var/lib/backups/MyFirstDatabase.sql
+
+drop database MyFirstDatabase;
+
+
+mysql -uroot -p MyFirstDatabase < /var/lib/backups/MyFirstDatabase.sql
+
+mysqldump -u root -p --no-data MyFirstDatabase > /var/lib/backups/MyFirstDatabase_data_only_objects_definition.sql
+
+mysqldump -u root -p MyFirstDatabase --no-create-info > /var/lib/backups/MyFirstDatabase_data_only.sql
+
+mysql -uroot -p MyFirstDatabase < /var/lib/backups/MyFirstDatabase_data_only_objects_definition.sql
+
+mysql -uroot -p MyFirstDatabase < /var/lib/backups/MyFirstDatabase_data_only.sql;
+
+
+
+exit

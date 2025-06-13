@@ -1,0 +1,39 @@
+SELECT * FROM userprofile INTO OUTFILE '/tmp/userprofileimported.csv';
+
+SELECT * FROM userprofile INTO OUTFILE '/home/mysqluser/Documents/userprofileimported.csv';
+LOAD DATA  LOCAL INFILE '/home/mysqluser/Documents/userprofile.csv' 
+INTO TABLE userprofile 
+FIELDS TERMINATED BY ',' 
+IGNORE 1 ROWS;
+
+
+SET GLOBAL local_infile=1;
+
+SELECT @@global.secure_file_priv;
+
+cat my.cnf
+
+secure-file-priv = ""
+
+sudo systemctl restart mysqld
+
+
+
+sudo systemctl start mysqld.service
+
+cleAR
+
+
+
+
+sudo systemctl restart mysqld
+
+
+datadir=/var/lib/mysql
+
+SET GLOBAL local_infile=1;
+
+LOAD DATA  LOCAL INFILE '/home/mysqluser/Documents/userprofile.csv' INTO TABLE userprofile FIELDS TERMINATED BY ',' IGNORE 1 ROWS;
+
+
+Error Code: 2068. LOAD DATA LOCAL INFILE file request rejected due to restrictions on access.

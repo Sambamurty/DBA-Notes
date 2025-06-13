@@ -1,0 +1,37 @@
+cd /var/lib/mysql
+ls -l
+
+sudo chmod -R 777 backups
+cd /
+show databases;
++--------------------+
+| Database           |
++--------------------+
+| MyFirstDatabase    |
+| TestDB             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| testDB             |
++--------------------+
+
+
+mysqldump -uroot -p MyFirstDatabase > /var/lib/mysql/backups/MyFirstDatabase.sql
+
+mysqldump -u root -p --all-databases > /var/lib/mysql/backups/all_databases.sql
+
+mysqldump -u root -p --databases MyFirstDatabase  TestDB > /var/lib/mysql/backups/all_databases.sql
+
+
+mysqldump -u root -p MyFirstDatabase --no-create-info > /var/lib/mysql/backups/MyFirstDatabase_data_only.sql
+
+mysqldump -u root -p --no-data MyFirstDatabase > /var/lib/mysql/backups/MyFirstDatabase_data_only_objects_definition.sql
+
+mysqldump -uroot -p --routines MyFirstDatabase > /var/lib/mysql/backups/MyFirstDatabase.sql
+
+mysqldump -u root -p MyFirstDatabase --single-transaction > /var/lib/mysql/backups/MyFirstDatabase.sql
+
+mysqldump -u root -p MyFirstDatabase  --skip-lock-tables > /var/lib/mysql/backups/MyFirstDatabase.sql
+

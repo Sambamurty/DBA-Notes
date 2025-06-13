@@ -1,0 +1,5 @@
+REVOKE SELECT ON sakila.* FROM 'databaseuser'@'%';
+
+REVOKE ALL PRIVILEGES FROM testuser'@'localhost';
+
+REVOKE GRANT OPTION FROM 'databaseuser'@'%';

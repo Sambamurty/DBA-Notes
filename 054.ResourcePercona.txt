@@ -1,0 +1,57 @@
+https://www.percona.com/software/mysql-database/percona-xtrabackup
+
+
+cd /home/mysqluser/Downloads
+
+
+yum localinstall percona-xtrabackup-80-8.0.28-21.1.el8.x86_64.rpm
+
+
+cd /var
+
+mkdir –m777 mysqldatabases
+cd mysqldatabases
+mkdir –m777 backups
+
+/var/mysqldatabases/backups
+
+-- LOGIN to MySQL
+
+CREATE USER 'bkuser'@'%' IDENTIFIED BY 'P@ssword1';
+GRANT RELOAD, LOCK TABLES, PROCESS, REPLICATION CLIENT ON *.* TO 'bkuser'@'%';
+GRANT BACKUP_ADMIN, PROCESS, RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'bkuser'@'%';
+GRANT SELECT ON performance_schema.log_status TO 'bkuser'@'%';
+GRANT SELECT ON performance_schema.keyring_component_status TO bkuser@'%'
+FLUSH PRIVILEGES;
+
+--EDIT my.cnf
+[client]
+user = bkuser
+password = P@ssword1
+
+--restart mysql 
+sudo systemctl restart mysqld
+
+
+
+xtrabackup --backup --target-dir=/var/mysqldatabases/backups/full
+
+cd /var/mysqldatabases/backups/full
+
+xtrabackup --prepare --target-dir=/var/mysqldatabases/backups/full
+
+sudo systemctl stop mysqld
+
+sudo systemctl status mysqld
+
+ll ll /var/lib/mysql
+rm -rf /var/lib/mysql/*
+
+xtrabackup --copy-back --target-dir=/var/mysqldatabases/backups/full
+
+chown -R mysql.mysql /var/lib/mysql
+
+systemctl start mysqld
+
+
+
