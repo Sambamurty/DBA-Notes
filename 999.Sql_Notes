@@ -1,0 +1,309 @@
+MySQL supports various data types, categorized into three main groups:
+
+1. Numeric Data Types
+
+Used for storing numbers:
+
+    TINYINT – Small integer (-128 to 127 or 0 to 255 if unsigned)
+
+    SMALLINT, MEDIUMINT, INT, BIGINT – Increasingly larger integer types
+
+    DECIMAL (NUMERIC) – Fixed-point precision numbers
+
+    FLOAT, DOUBLE – Floating-point numbers
+
+    BIT – Stores binary values (0 or 1)
+
+2. String Data Types
+
+Used for storing text and binary data:
+
+    CHAR(n), VARCHAR(n) – Fixed and variable-length strings
+
+    TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT – Large text storage
+
+    BLOB, TINYBLOB, MEDIUMBLOB, LONGBLOB – Binary large objects
+
+    ENUM – Stores predefined values
+
+    SET – Stores multiple predefined values
+
+3. Date and Time Data Types
+
+Used for storing date and time values:
+
+    DATE – Stores only date (YYYY-MM-DD)
+
+    DATETIME – Stores date and time (YYYY-MM-DD HH:MM:SS)
+
+    TIMESTAMP – Stores date and time with automatic updates
+
+    TIME – Stores time (HH:MM:SS)
+
+    YEAR – Stores only year (YYYY)
+    
+
+
+--EXCEPTION HANDLING IN MYSQL.
+	
+	DELIMITER $$
+
+	CREATE PROCEDURE SafeDivision(IN num1 INT, IN num2 INT, OUT result DOUBLE(5,2))
+	BEGIN
+	    DECLARE division_by_zero CONDITION FOR SQLSTATE '22012';
+	    
+	    -- Corrected handler syntax
+	    DECLARE CONTINUE HANDLER FOR division_by_zero 
+	    SET result = NULL;
+
+	    -- Perform the division safely
+	    IF num2 <> 0 THEN
+		SET result = num1 / num2;
+	    ELSE
+		SET result = NULL;
+	    END IF;
+	END $$
+
+	DELIMITER ;
+
+    
+    
+ 
+ 
+======================================================================================================================================================================================
+->Command to find the database name where the table is present
+ 
+	SELECT TABLE_SCHEMA 
+	FROM INFORMATION_SCHEMA.TABLES 
+	WHERE TABLE_NAME = 'your_table_name';
+	
+->Command to see store procedures in database
+	
+	SELECT ROUTINE_NAME  FROM INFORMATION_SCHEMA.ROUTINES  
+	WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_SCHEMA = 'transaction_management';
+	
+	SELECT ROUTINE_SCHEMA FROM INFORMATION_SCHEMA.ROUTINES  
+	WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'CREATE_DATES';
+	
+
+->Command to get database name based by table name
+
+	SELECT TABLE_SCHEMA, TABLE_NAME 
+	FROM INFORMATION_SCHEMA.TABLES 
+	WHERE TABLE_NAME ='IAM_PERMISSION';
+	
+==========================================================================================================================================================================================
+->Insert data from .csv file to table
+	
+	step-1:
+		In my.cnf we should set local-infile=1.
+			to do that 
+				cat /etc/mysql/my.cnf  # View the contents
+				sudo nano /etc/mysql/my.cnf  # Edit the file
+			in that 
+				[mysqld]
+				local-infile=1
+	step-2:
+		Restart mysql
+			systemctl restart mysql
+	step-3:
+		connect to mysql and try to run this query
+			
+			Load data local infile '/home/monitor/Downloads/userprofile.csv'
+			into table userprofile
+			fields terminated by ','
+			enclosed by ""
+			lines terminated by '\n'
+			ignore 1 rows;	
+		
+		If it won't work then ---> set local-infile=1	
+
+
+==========================================================================================================================================================================================
+
+BINARY INSTALLATION OF MYSQL:
+	
+	-Download mysql file for binary install :-
+		
+		wget "https://downloads.mysql.com/archives/get/p/23/file/mysql-8.0.30-linux-glibc2.12-x86_64.tar.xz"
+	
+	-Untar the downloaded file :-
+		
+		tar -xvf file-path or file name if your in that path
+	
+	-Make a directory to store the data and also file for seeing errors(like error.log)
+		
+		mkdir data
+		
+		touch error.log
+	
+	-And change the ownership of user and groups for all files to mysql and also change the permission of files to 750
+	
+		chown -R mysql:mysql .
+		
+		chmod -R 750 .
+	
+	-Now intiallize the mysql with command 
+	
+		./bin/mysqld --initialize --datadir=full path of data file --user=mysql --log-error=full path of error log file
+		--After running this we can mysql is intailized and a password is generated in error log.
+	
+	-Next to that we should create a file like my.cnf( mysql read all the configurations from this file first) and edit it
+	
+		[mysqld]
+
+		# User and directory configurations
+		
+		user = mysql  # Defines the system user under which MySQL runs
+		basedir = /samba/mysql-3308/  # Base directory for MySQL installation
+		pid-file = /samba/mysql-3308/mysqld.pid  # Location of the PID file
+		datadir = /samba/mysql-3308/data-3308/  # Directory where MySQL stores data
+		socket = /samba/mysql-3308/mysqld.sock  # Path to the Unix socket file
+		log-error = /samba/mysql-3308/error.log  # Error log file location
+
+		# Network settings
+		
+		bind-address = 0.0.0.0  # Allows MySQL to listen on all network interfaces
+		port = 3308  # Specifies the port MySQL listens on
+
+		# Replication settings
+		
+		server-id = 3  # Unique identifier for the MySQL server in replication
+		log-bin = /samba/mysql-3308/mysql-bin.log  # Enables binary logging for replication
+		relay-log = /samba/mysql-3308/mysql-relay-bin.log  # Stores relay logs for replicas
+		gtid_mode=ON  # Enables GTID-based replication
+		enforce-gtid-consistency=ON  # Ensures GTID consistency across transactions
+		log-replica-updates=ON  # Ensures replicas log updates for further replication
+		skip-replica-start=ON  # Prevents automatic start of replication on server startup
+
+		# Binary log management
+		
+		expire_logs_days = 10  # Sets binary log expiration to 10 days
+		session_track_gtids = OWN_GTID  # Tracks GTID for session consistency
+		session_track_transaction_info=STATE  # Tracks transaction state in sessions
+		binlog_row_image=MINIMAL  # Stores minimal row data in binary logs for efficiency
+
+		# InnoDB performance tuning
+		
+		innodb_buffer_pool_size=2G  # Allocates 2GB for caching InnoDB data and indexes
+		innodb_log_file_size=1G  # Defines the size of InnoDB redo logs
+		innodb_flush_log_at_trx_commit=0  # Controls transaction log flushing behavior (performance vs. durability)
+
+		# Binary log size management
+		
+		max_binlog_size=1G  # Sets the maximum size of a single binary log file
+
+		# MyISAM-specific settings
+		key_buffer_size = 16M  # Allocates memory for MyISAM index caching
+
+		# Character set and collation settings
+		
+		character_set_server=utf8  # Sets the default character encoding to UTF-8
+		collation_server=utf8_general_ci  # Defines default collation (case-insensitive sorting)
+
+		# Performance monitoring
+		
+		performance_schema=ON  # Enables Performance Schema for monitoring MySQL internals
+
+		# Reporting settings
+		
+		report_host = localhost  # Defines the hostname reported by MySQL to monitoring tools
+		
+	-Now start the mysql using
+		
+		./bin/mysqld_safe --defaults-file=/samba/mysql-3308/my.cnf &	
+		
+===================================================================================================================================================================================
+
+Replication setup using binlog's:
+
+	Step-1 :-
+		Create two instanse of mysql in two diffrent servers (Mysql Master and Mysql Slave).
+	Step-2 :-
+		Check connectivity between each other.
+		
+			like - mysql -h192.168.34.110 -uroot -p or ping
+			
+	Step-3 :- 
+		Change my.cnf on master to add replication options
+			
+			add server-id option in my.cnf
+	
+	Step-4 :-
+		Create Replication user on master(slave will use this for connection and replication) and grant replication privileges 
+			
+			create user 'repl'@'%' identified by 'password';
+			
+			grant replication slave on *.* to 'repl'@'%';
+			
+			flush privileges;
+	
+	Step-5 :-
+		Get the bin-log position
+			
+			show master status\G
+	
+	Step-6 :-
+		Take full backup for all databases in master
+			
+			mysqldump -uroot -p --all-databases > /path/of/the/file
+	
+	Step-7 :-
+		Edit slave my.cnf file
+			
+			server-id = 2
+			systemctl restart mysql
+	
+	Step-8 :-
+		Restore the backup file in slave
+			
+			mysql -h192.168.34.110 -uroot -p < /path/of/the/file
+	
+	Step-9 :-
+		Set Master host on slave
+			
+			change master to
+			master_host='localhost',
+			master_port=3307,
+			master_user='repli',
+			master_password='00Samb@7',
+			master_log_file='mysql-bin.000001',
+			master_log_pos=1198;
+	
+	Step-10 :-
+		Start the slave
+			
+			start slave;
+			show slave stauts;
+	
+	
+	Queries to skip replication:
+		
+		SET GTID_NEXT='b5d91141-4770-11f0-a1f3-4ccc6a3977bd:9';
+		BEGIN;
+		COMMIT;
+		SET GTID_NEXT='AUTOMATIC';
+		START SLAVE SQL_THREAD;		
+					
+						
+		
+							
+					
+		
+		
+		
+
+		
+			
+		
+		
+			
+	 			
+
+			
+							
+			
+
+
+
+   
