@@ -95,7 +95,7 @@ Used for storing date and time values:
 ==========================================================================================================================================================================================
 ->Insert data from .csv file to table
 	
-	step-1:
+	step-1: This will enable local-infile in server side
 		In my.cnf we should set local-infile=1.
 			to do that 
 				cat /etc/mysql/my.cnf  # View the contents
@@ -103,6 +103,10 @@ Used for storing date and time values:
 			in that 
 				[mysqld]
 				local-infile=1
+
+		To enable local-infile in client side start mysql like this,
+			mysql -u root -p --local-infile=1
+
 	step-2:
 		Restart mysql
 			systemctl restart mysql
