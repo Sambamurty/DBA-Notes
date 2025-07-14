@@ -116,7 +116,22 @@ Used for storing date and time values:
 			lines terminated by '\n'
 			ignore 1 rows;	
 		
-		If it won't work then ---> set local-infile=1	
+		If it won't work then ---> set local-infile=1
+
+
+Extract data to .csv file directly-
+
+		select * from city into outfile 
+		'/home/samba/practice_under/sakila_actor.csv' 
+		fields terminated by ',' 
+		enclosed by '"' 
+		lines terminated by '\n';
+
+	-the file will we stored in default path, to get that path 
+
+		show variables like 'secure_file_priv';
+				(or)
+		select @@secure_file_priv;
 
 
 ==========================================================================================================================================================================================
